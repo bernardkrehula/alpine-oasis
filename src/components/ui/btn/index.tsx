@@ -9,11 +9,12 @@ const Btn = ({
   children,
   disabled,
   name,
+  active
 }: BtnType) => {
   return (
     <button
       onClick={onClick}
-      className={`btn ${variation} ${size}`}
+      className={`btn ${variation} ${size} ${active}`}
       type={type}
       disabled={disabled}
       name={name}
