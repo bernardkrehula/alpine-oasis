@@ -8,4 +8,5 @@ export type BtnType = {
   children: string | ReactNode;
   disabled?: boolean;
   name?: string;
+  active?: string;
 };
