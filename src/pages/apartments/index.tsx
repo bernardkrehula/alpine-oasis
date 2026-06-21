@@ -15,7 +15,11 @@ const Apartments = () => {
     withDiscount: false,
   });
 
- 
+  const setSort = (e: React.ChangeEvent<HTMLButtonElement>) => {
+    const option = e.target.value;
+    searchParams.set("sortBy", option)
+    setSearchParams(searchParams);
+  }
   const setDiscount = (discount: string) => {
     searchParams.set("discount", discount)
     setSearchParams(searchParams);
