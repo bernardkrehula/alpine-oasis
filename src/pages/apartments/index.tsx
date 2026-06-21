@@ -14,17 +14,17 @@ const Apartments = () => {
     noDiscount: false,
     withDiscount: false,
   });
+  const [apartments, setApartments] = useState(apartmentsConifg);
 
-  const setSort = (e: React.ChangeEvent<HTMLButtonElement>) => {
+  const setSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
-    searchParams.set("sortBy", option)
+    searchParams.set("sortBy", option);
     setSearchParams(searchParams);
-  }
+  };
   const setDiscount = (discount: string) => {
-    searchParams.set("discount", discount)
+    searchParams.set("discount", discount);
     setSearchParams(searchParams);
-    console.log('radi')
-  }
+  };
 
   const handleActiveIcon = (e: React.ChangeEvent<HTMLButtonElement>) => {
     const name = e.target.name;
@@ -40,8 +40,43 @@ const Apartments = () => {
 
   const handleSetDiscount = (e: React.ChangeEvent<HTMLButtonElement>) => {
     handleActiveIcon(e);
-    setDiscount('no-discount');
-  }
+    setDiscount("no-discount");
+    /* sortApartments(); */
+  };
+
+  const sortApartments = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const sort = e.target.value;
+
+    setApartments((prev) => {
+      const sorted = [...prev]; 
+
+      switch (sort) {
+        case "name-asc":
+          return sorted.sort((a, b) =>
+            a.id.toLowerCase().localeCompare(b.id.toLowerCase()),
+          );
+        case "name-desc":
+          return sorted.sort((a, b) =>
+            b.id.toLowerCase().localeCompare(a.id.toLowerCase()),
+          );
+        case "price-asc":
+          return sorted.sort((a, b) => a.price - b.price);
+        case "price-desc":
+          return sorted.sort((a, b) => b.price - a.price);
+        case "capacity-asc":
+          return sorted.sort((a, b) => a.capacity - b.capacity);
+        case "capacity-desc":
+          return sorted.sort((a, b) => b.capacity - a.capacity);
+        default:
+          return prev;
+      }
+    });
+  };
+  const handleSetSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSort(e);
+    sortApartments(e);
+  };
+
   return (
     <div className="apartments">
       <div className="apartments-header">
@@ -63,7 +98,7 @@ const Apartments = () => {
             );
           })}
         </menu>
-        <Select options={apartmentsSort} onChange={setSort} size="md" />
+        <Select options={apartmentsSort} onChange={handleSetSort} size="md" />
       </div>
       <div className="apartments-table">
         <thead className="apartments-table-header">
@@ -76,10 +111,10 @@ const Apartments = () => {
         </thead>
 
         <table className="apartments-table-content">
-          {apartmentsConifg.map((apartment) => {
+          {apartments.map((apartment) => {
             return <Apartment key={apartment.id} apartment={apartment} />;
           })}
-        </table> 
+        </table>
       </div>
     </div>
   );
