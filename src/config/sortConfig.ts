@@ -1,10 +1,10 @@
 export const apartmentsSort = [
-  "Sort by name (A-Z)",
-  "Sort by name (Z-A)",
-  "Sort by price (low first)",
-  "Sort by price (high first)",
-  "Sort by capacity (low first)",
-  "Sort by capacity (high first)",
+  { name: "name-asc", content: "Sort by name (A-Z)" },
+  { name: "name-desc", content: "Sort by name (Z-A)" },
+  { name: "price-asc", content: "Sort by price (low first)" },
+  { name: "price-desc", content: "Sort by price (high first)" },
+  { name: "capacity-asc", content: "Sort by capacity (low first)" },
+  { name: "capacity-desc", content: "Sort by capacity (high first)" },
 ];
 
 export const aparmnetsDiscount = [
