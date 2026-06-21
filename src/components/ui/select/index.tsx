@@ -1,12 +1,12 @@
 import "./index.css";
 import Option from "./option";
 
-const Select = ({ options, size }) => {
-    console.log(options)
+const Select = ({ options, size, onChange }) => {
   return (
-    <select className={`select ${size}`}>
+    <select onChange={onChange} className={`select ${size}`}>
       {options.map((option) => {
-        return <Option option={option} />;
+        const {name, content} = option;
+        return <Option name={name} content={content} />;
       })}
     </select>
   );
