@@ -2,11 +2,11 @@ import type { IconType } from "../../../types/ui.types.ts/IconType";
 import { iconConfig } from "./iconsConfig";
 import "./index.css";
 
-const Icon = ({ name, variation, onClick }: IconType) => {
+const Icon = ({ name, activeIcon, variation, onClick }: IconType) => {
   return (
     <svg
       onClick={onClick}
-      className={`icon ${variation}`}
+      className={`icon ${variation} ${activeIcon && activeIcon[name] && "active"}`}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
