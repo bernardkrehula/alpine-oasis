@@ -41,14 +41,29 @@ const Apartments = () => {
   const handleSetDiscount = (e: React.ChangeEvent<HTMLButtonElement>) => {
     handleActiveIcon(e);
     setDiscount("no-discount");
-    /* sortApartments(); */
+    filterDiscount(e);
+  };
+  const filterDiscount = (e: React.ChangeEvent<HTMLButtonElement>) => {
+    const name = e.target.name;
+    setApartments((prev) => {
+      switch (name) {
+        case "all":
+          return apartmentsConifg;
+        case "noDiscount":
+          return apartmentsConifg.filter((a) => a.discount === 0);
+        case "withDiscount":
+          return apartmentsConifg.filter((a) => a.discount > 0);
+        default:
+          return prev;
+      }
+    });
   };
 
   const sortApartments = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const sort = e.target.value;
 
     setApartments((prev) => {
-      const sorted = [...prev]; 
+      const sorted = [...prev];
 
       switch (sort) {
         case "name-asc":
@@ -116,6 +131,7 @@ const Apartments = () => {
           })}
         </table>
       </div>
+      <Btn variation="ghost" size="md">Add new apartment</Btn>
     </div>
   );
 };
