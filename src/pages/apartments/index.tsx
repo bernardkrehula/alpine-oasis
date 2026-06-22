@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Btn from "../../components/ui/btn";
-import Select from "../../components/ui/select";
-import { aparmnetsDiscount, apartmentsSort } from "../../config/sortConfig";
+import Btn from "#/components/ui/btn";
+import Select from "#/components/ui/select";
+import { aparmnetsDiscount, apartmentsSort } from "#/config/sortConfig";
 import "./index.css";
-import { apartmentsConifg } from "../../config/apartmentsConfig";
+import { apartmentsConifg } from "#/config/apartmentsConfig";
 import Apartment from "./apartment";
 import { useSearchParams } from "react-router-dom";
+import { apartmentEditConfig } from "./apartment/apartmentEditModal/apartmentEditConfig";
 
 const Apartments = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,6 +16,12 @@ const Apartments = () => {
     withDiscount: false,
   });
   const [apartments, setApartments] = useState(apartmentsConifg);
+  const [inputsValue, setInputsValue] = useState({
+    id: 0,
+    capacity: 0,
+    price: 0,
+    discount: 0,
+  });
 
   const setSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
@@ -92,6 +99,15 @@ const Apartments = () => {
     sortApartments(e);
   };
 
+  const handleEditApartment = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formValue = apartmentEditConfig.map(({name}) => ({[name]: formData.get(name)}))
+    setInputsValue(formValue)
+    console.log(formValue)
+  }
+
+
   return (
     <div className="apartments">
       <div className="apartments-header">
@@ -127,7 +143,7 @@ const Apartments = () => {
 
         <table className="apartments-table-content">
           {apartments.map((apartment) => {
-            return <Apartment key={apartment.id} apartment={apartment} />;
+            return <Apartment key={apartment.id} apartment={apartment} handleEditApartment={handleEditApartment} handleInputs={handleInputs} inputsValue={inputsValue}/>;
           })}
         </table>
       </div>
