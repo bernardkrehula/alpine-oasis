@@ -1,12 +1,16 @@
 import { useState } from "react";
 import Btn from "#/components/ui/btn";
 import Select from "#/components/ui/select";
-import { aparmnetsDiscount, apartmentsSort } from "#/config/sortConfig";
+import {
+  aparmnetsDiscount,
+  apartmentsSort,
+} from "#/config/configData/sortConfig";
 import "./index.css";
-import { apartmentsConifg } from "#/config/apartmentsConfig";
 import Apartment from "./apartment";
 import { useSearchParams } from "react-router-dom";
-import { apartmentEditConfig } from "./apartment/apartmentEditModal/apartmentEditConfig";
+import { useQuery } from "@tanstack/react-query";
+import { requestApartments } from "#/api/requestApartmets";
+import { requestEditApartment } from "#/api/requestEditApartment";
 
 const Apartments = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,13 +19,13 @@ const Apartments = () => {
     noDiscount: false,
     withDiscount: false,
   });
-  const [apartments, setApartments] = useState(apartmentsConifg);
-  const [inputsValue, setInputsValue] = useState({
-    id: 0,
-    capacity: 0,
-    price: 0,
-    discount: 0,
+  const [activeEditModal, setActiveEditModal] = useState<boolean>(false);
+
+  const { data: apartments, isLoading } = useQuery({
+    queryKey: ["apartments"],
+    queryFn: () => requestApartments(),
   });
+  if (isLoading) return;
 
   const setSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
@@ -45,71 +49,16 @@ const Apartments = () => {
     });
   };
 
-  const handleSetDiscount = (e: React.ChangeEvent<HTMLButtonElement>) => {
-    handleActiveIcon(e);
-    setDiscount("no-discount");
-    filterDiscount(e);
-  };
-  const filterDiscount = (e: React.ChangeEvent<HTMLButtonElement>) => {
-    const name = e.target.name;
-    setApartments((prev) => {
-      switch (name) {
-        case "all":
-          return apartmentsConifg;
-        case "noDiscount":
-          return apartmentsConifg.filter((a) => a.discount === 0);
-        case "withDiscount":
-          return apartmentsConifg.filter((a) => a.discount > 0);
-        default:
-          return prev;
-      }
-    });
-  };
-
-  const sortApartments = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const sort = e.target.value;
-
-    setApartments((prev) => {
-      const sorted = [...prev];
-
-      switch (sort) {
-        case "name-asc":
-          return sorted.sort((a, b) =>
-            a.id.toLowerCase().localeCompare(b.id.toLowerCase()),
-          );
-        case "name-desc":
-          return sorted.sort((a, b) =>
-            b.id.toLowerCase().localeCompare(a.id.toLowerCase()),
-          );
-        case "price-asc":
-          return sorted.sort((a, b) => a.price - b.price);
-        case "price-desc":
-          return sorted.sort((a, b) => b.price - a.price);
-        case "capacity-asc":
-          return sorted.sort((a, b) => a.capacity - b.capacity);
-        case "capacity-desc":
-          return sorted.sort((a, b) => b.capacity - a.capacity);
-        default:
-          return prev;
-      }
-    });
-  };
-  const handleSetSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSort(e);
-    sortApartments(e);
-  };
-
-  const handleEditApartment = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleEditApartment = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const formValue = apartmentEditConfig.map(({name}) => ({[name]: formData.get(name)}))
-    setInputsValue(formValue)
-    console.log(formValue)
-  }
-  const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setInputsValue(prev => ({...prev, [name]: value}))
+    const id = Number(e.target.id);
+    const formData = Object.fromEntries(new FormData(e.target));
+    const data = { id, ...formData };
+    await requestEditApartment(data);
+    handleActiveEditModal();
+  };
+  const handleActiveEditModal = () => {
+    setActiveEditModal(prev => !prev);
   }
 
   return (
@@ -126,14 +75,13 @@ const Apartments = () => {
                 size="md"
                 active={`${activeIcon && activeIcon[name] && "act"}`}
                 name={name}
-                onClick={handleSetDiscount}
               >
                 {content}
               </Btn>
             );
           })}
         </menu>
-        <Select options={apartmentsSort} onChange={handleSetSort} size="md" />
+        <Select options={apartmentsSort} size="md" />
       </div>
       <div className="apartments-table">
         <thead className="apartments-table-header">
@@ -146,12 +94,22 @@ const Apartments = () => {
         </thead>
 
         <table className="apartments-table-content">
-          {apartments.map((apartment) => {
-            return <Apartment key={apartment.id} apartment={apartment} handleEditApartment={handleEditApartment} handleInputs={handleInputs} inputsValue={inputsValue}/>;
+          {apartments?.map((apartment) => {
+            return (
+              <Apartment
+                key={apartment.id}
+                apartment={apartment}
+                handleEditApartment={handleEditApartment}
+                activeEditModal={activeEditModal}
+                handleActiveEditModal={handleActiveEditModal}
+              />
+            );
           })}
         </table>
       </div>
-      <Btn variation="ghost" size="md">Add new apartment</Btn>
+      <Btn variation="ghost" size="md">
+        Add new apartment
+      </Btn>
     </div>
   );
 };
