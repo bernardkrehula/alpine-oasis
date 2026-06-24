@@ -1,0 +1,53 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 9;
+}
+.apartment-edit-content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 800px;
+  background: var(--secondary-layouts-bg);
+  z-index: 10;
+  border-radius: 10px;
+  top: 220%;
+  left: 44%;
+  transform: translate(-50%, -50%);
+  padding: 30px 45px;
+}
+.apartment-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+.apartment-inputs div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+  width: 100%;
+}
+.apartment-inputs div span{
+  margin-right: auto;
+}
+.apartment-inputs div input{
+ margin-right: 200px;
+}
+.apartment-edit-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: auto;
+}
+.x-icon{
+  margin-left: auto;
+  margin-right: -25px;
+  margin-top: -10px;
+  cursor: pointer;
+  color: white;
+}
