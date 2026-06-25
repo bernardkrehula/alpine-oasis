@@ -2,15 +2,53 @@ import supabase from "#/config/supabaseClientVite";
 import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
-export const requestApartments = async () => {
-  const response = await supabase.from("apartments").select();
+export const requestApartments = async (filterValues: {
+  discount: string;
+  sortBy: string;
+}) => {
+  let query = supabase.from("apartments").select();
 
-  if (response.error) {
-    if (isAuthApiError(response)) {
-      return response.error;
+  if (filterValues) {
+    switch (filterValues.discount) {
+      case "no-discount":
+        query = query.eq("discount", 0);
+        break;
+      case "with-discount":
+        query = query.neq("discount", 0);
+        break;
+      case "all":
+      default:
+        break;
+    }
+    switch (filterValues.sortBy) {
+      case "name-asc":
+        query = query.order("name", { ascending: true });
+        break;
+      case "name-desc":
+        query = query.order("name", { ascending: false });
+        break;
+      case "price-asc":
+        query = query.order("price", { ascending: true });
+        break;
+      case "price-desc":
+        query = query.order("price", { ascending: false });
+        break;
+      case "capacity-asc":
+        query = query.order("capacity", { ascending: true });
+        break;
+      case "capacity-desc":
+        query = query.order("capacity", { ascending: false });
+        break;
+    }
+  }
+  const result = await query;
+
+  if (result.error) {
+    if (isAuthApiError(result)) {
+      return result.error;
     } else {
       throw new GenericError();
     }
   }
-  return response.data;
+  return result.data;
 };
