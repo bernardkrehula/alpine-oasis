@@ -21,12 +21,11 @@
   margin-right: 15px;
 }
 .apartments-table {
-  background-color: var(--body-bg);
-  width: 100%;
-  margin-top: 30px;
+  margin: 30px auto;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 15px;
+  background-color: var(--secondary-layouts-bg);
+  padding-bottom: 3px;
 }
 .apartments-table-header {
   display: flex;
@@ -34,6 +33,8 @@
   height: 50px;
   color: rgb(255, 255, 255, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--body-bg);
+  border-radius: 10px 10px 0px 0px;
 }
 .apartments-table-header tr {
   display: flex;
@@ -43,20 +44,14 @@
   font-size: 1.6rem;
   text-transform: uppercase;
 }
-.apartments-table-content {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  background-color: var(--secondary-layouts-bg);
-}
 .apartment-th {
-  margin-left: 150px;
+  margin-left: 180px;
 }
 .capacity-th {
   margin-left: 200px;
 }
 .price-th {
-  margin-left: 200px;
+  margin-left: 280px;
 }
 .discount-th {
   margin-left: 200px;
