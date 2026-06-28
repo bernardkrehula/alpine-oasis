@@ -1,4 +1,4 @@
-import type { BtnType } from "../../../types/ui.types.ts/BtnType";
+import type { BtnType } from "#/types/ui.types.ts/BtnType";
 import "./index.css";
 
 const Btn = ({
@@ -14,7 +14,7 @@ const Btn = ({
   return (
     <button
       onClick={onClick}
-      className={`btn ${variation} ${size} ${active}`}
+      className={`btn btn-${variation} ${size} ${active}`}
       type={type}
       disabled={disabled}
       name={name}
