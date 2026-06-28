@@ -1,8 +1,9 @@
 import supabase from "#/config/supabaseClientVite";
+import type { ApartmentType } from "#/types/pagest.types.ts/ApartmentPage.types.ts/Apartment.type";
 import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
-export const requestEditApartment = async (apartment) => {
+export const requestEditApartment = async (apartment: ApartmentType) => {
   const { id } = apartment;
 
   const response = await supabase
@@ -17,6 +18,6 @@ export const requestEditApartment = async (apartment) => {
       throw new GenericError();
     }
   }
-  console.log(response);
+ 
   return response;
 };

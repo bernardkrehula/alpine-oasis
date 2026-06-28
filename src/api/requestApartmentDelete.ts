@@ -2,7 +2,7 @@ import supabase from "#/config/supabaseClientVite";
 import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
-export const requestApartmentDelete = async (id: number) => {
+export const requestApartmentDelete = async (id: string) => {
   const response = await supabase.from("apartments").delete().eq("id", id);
 
   if (response.error) {

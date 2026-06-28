@@ -1,11 +1,12 @@
 import supabase from "#/config/supabaseClientVite";
+import type { ApartmentType } from "#/types/pagest.types.ts/ApartmentPage.types.ts/Apartment.type";
 import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
 export const requestApartments = async (filterValues: {
   discount: string;
   sortBy: string;
-}) => {
+}): Promise<ApartmentType[]> => {
   let query = supabase.from("apartments").select();
 
   if (filterValues) {
@@ -45,7 +46,7 @@ export const requestApartments = async (filterValues: {
 
   if (result.error) {
     if (isAuthApiError(result)) {
-      return result.error;
+      throw result.error;
     } else {
       throw new GenericError();
     }
