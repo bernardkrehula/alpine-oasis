@@ -2,13 +2,14 @@ import type { ApartmentType } from "#/types/pagest.types.ts/ApartmentPage.types.
 
 export const getFormData = (e: React.ChangeEvent<HTMLFormElement>) => {
   e.preventDefault();
-  const id = Number(e.target.id);
+  const id = e.target.id;
+  const passedId = id ? id : crypto.randomUUID();
   const formData = Object.fromEntries(new FormData(e.target));
   const rawData = { id, ...formData } as Record<string, any>;
 
   const data: ApartmentType = {
         ...rawData,
-        id: crypto.randomUUID(),
+        id: passedId,
         name: String(rawData.name),
         description: String(rawData.description ?? ""),
         capacity: Number(rawData.capacity),
