@@ -5,7 +5,6 @@ import {
   apartmentsSort,
 } from "#/config/configData/sortConfig";
 import "./index.css";
-import Apartment from "./apartment";
 import { useSearchParams } from "react-router-dom";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { requestApartments } from "#/api/requestApartmets";
@@ -17,28 +16,15 @@ import { requestAddNewApartment } from "#/api/requestAddNewApartment";
 import Filters from "#/components/ui/filters";
 import Sort from "#/components/ui/sort";
 import Table from "#/components/ui/table";
-import { theadData } from "./apartmentsTableData";
-
-const columns = [
-  {
-    key: "img",
-    className: "img-td",
-    render: (row) => <img src={row.img} alt={row.name} />,
-  },
-  { key: "id", className: "id-td" },
-  { key: "name", className: "name-td" },
-  {
-    key: "capacity",
-    className: "capacity-td",
-    render: (row) => `Fits up to ${row.capacity} guests`,
-  },
-  { key: "price", className: "price-td", render: (row) => `$${row.price}` },
-  {
-    key: "discount",
-    className: "discount-td",
-    render: (row) => `$${row.discount}`,
-  },
-];
+import Theader from "#/components/ui/table/Theader";
+import Tbody from "#/components/ui/table/Tbody";
+import TRow from "#/components/ui/table/TRow";
+import { columns, defaultApartment, theadData } from "./apartmentsData";
+import { requestDuplicateApartment } from "#/api/requestDuplicateApartment";
+import { toApartmentId } from "#/types/pagest.types.ts/ApartmentPage.types.ts/ApartmentId";
+import { requestApartmentDelete } from "#/api/requestApartmentDelete";
+import { requestEditApartment } from "#/api/requestEditApartment";
+import { requestSingleApartment } from "#/api/requestSingleApartment";
 
 const Apartments = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,6 +38,8 @@ const Apartments = () => {
     sortBy: searchParams.get("sortBy") ?? "name-asc",
   };
   const [activeModal, setActiveModal] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [apartment, setApartment] = useState<ApartmentType>(defaultApartment);
 
   const {
     data: apartments,
@@ -62,7 +50,7 @@ const Apartments = () => {
     queryFn: () => requestApartments(filterValues),
     placeholderData: keepPreviousData,
   });
-  if (isLoading) return;
+  if (isLoading || !apartments) return;
 
   const setSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
@@ -88,11 +76,12 @@ const Apartments = () => {
       return active as typeof activeIcon;
     });
   };
-  const handleAddNewApartment = async (
-    e: React.ChangeEvent<HTMLFormElement>,
-  ) => {
+  const handleApartmentForm = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    const id = e.currentTarget.id;
     const data = getFormData(e);
-    await requestAddNewApartment(data);
+
+    if (id) await requestEditApartment(data);
+    else await requestAddNewApartment(data);
     handleActiveModal();
     refetch();
   };
@@ -100,11 +89,38 @@ const Apartments = () => {
   const handleActiveModal = () => {
     setActiveModal((prev) => !prev);
   };
-  //Napraviti komponentu filters(odradeno) i sort(odradeno, preimenovana select componenta)
-  //Sa tables napraviti da bude reusable u bookings
-  //Table, tablehead, tablebody, tablerow
-  //Filters, sort
+  const showNewApartmentForm = () => {
+    handleActiveModal();
+    setApartment(defaultApartment);
+    setIsEdit(false);
+  };
 
+  const duplicateApartment = async (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const row = target.closest("tr");
+    if (!row) return;
+
+    const id = toApartmentId(row.id);
+    await requestDuplicateApartment(id);
+    refetch();
+  };
+  const openActiveApartmentModal = async (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const row = target.closest("tr");
+    if (!row) return;
+
+    const id = toApartmentId(row.id);
+    const data = await requestSingleApartment(id);
+    setApartment(data);
+    setIsEdit(true);
+    handleActiveModal();
+  };
+
+  const deleteApartment = async (id: string) => {
+    const apartmentId = toApartmentId(id);
+    await requestApartmentDelete(apartmentId);
+    refetch();
+  };
   return (
     <div className="apartments">
       <div className="apartments-header">
@@ -116,36 +132,31 @@ const Apartments = () => {
         />
         <Sort onChange={setSort} options={apartmentsSort} size="md" />
       </div>
-      <Table theadData={theadData} tbodyData={apartments} columns={columns} />
-      {/* <table className="apartments-table">
-        <thead className="apartments-table-header">
-          <tr>
-            <th className="apartment-th">Apartment</th>
-            <th className="capacity-th">Capacity</th>
-            <th className="price-th">Price</th>
-            <th className="discount-th">Discount</th>
-          </tr>
-        </thead>
-        {apartments?.map((apartment: ApartmentType, index: number) => {
-          return (
-            <Apartment
-              key={apartment.id}
-              isLast={index === apartments.length - 1}
-              apartment={apartment}
-              refetch={refetch}
+      <Table>
+        <Theader theadData={theadData} />
+        <Tbody>
+          {apartments.map((row: ApartmentType) => (
+            <TRow
+              key={row.id}
+              row={row}
+              columns={columns}
+              onFirstAction={duplicateApartment}
+              onSecondAction={openActiveApartmentModal}
+              onThirdAction={deleteApartment}
             />
-          );
-        })}
-      </table> */}
+          ))}
+        </Tbody>
+      </Table>
       {activeModal && (
         <ApartmentModal
-          activeModal={activeModal}
           handleActiveModal={handleActiveModal}
-          handleApartmentData={handleAddNewApartment}
+          handleApartmentData={handleApartmentForm}
+          apartment={apartment}
+          isEdit={isEdit}
         />
       )}
       <Btn
-        onClick={handleActiveModal}
+        onClick={showNewApartmentForm}
         type="button"
         variation="primary"
         size="lg"
