@@ -1,0 +1,15 @@
+.settings {
+  padding: 30px 40px;
+  padding-right: 50px;
+  width: 100%;
+}
+.settings h1 {
+  color: white;
+  font-size: 3rem;
+  margin-bottom: 30px;
+}
+.settings .form {
+  background-color: var(--secondary-layouts-bg);
+  border-radius: 10px;
+  padding: 30px 45px;
+}
