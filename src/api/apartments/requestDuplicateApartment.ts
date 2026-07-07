@@ -1,11 +1,9 @@
 import supabase from "#/config/supabaseClientVite";
-import type { ApartmentType } from "#/types/pagest.types.ts/ApartmentPage.types.ts/Apartment.type";
+import type { ApartmentId } from "#/types/pagest.types.ts/ApartmentPage.types.ts/ApartmentId";
 import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
-export const requestDuplicateApartment = async (apartment: ApartmentType) => {
-  const { id } = apartment;
-
+export const requestDuplicateApartment = async (id: ApartmentId) => {
   const response = await supabase
     .from("apartments")
     .select("*")

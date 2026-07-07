@@ -11,7 +11,7 @@ export const requestEditApartment = async (apartment: ApartmentType) => {
     .update(apartment)
     .eq("id", id);
 
-  if (response.error) {
+    if (response.error) {
     if (isAuthApiError(response)) {
       return response.error;
     } else {

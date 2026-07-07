@@ -21,6 +21,7 @@ export const requestApartments = async (filterValues: {
       default:
         break;
     }
+   
     switch (filterValues.sortBy) {
       case "name-asc":
         query = query.order("name", { ascending: true });
