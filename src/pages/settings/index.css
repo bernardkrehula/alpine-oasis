@@ -13,3 +13,7 @@
   border-radius: 10px;
   padding: 30px 45px;
 }
+.settings-loader{
+  margin: 200px auto;
+  width: fit-content;
+}
