@@ -1,0 +1,79 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+.login-loader{
+  margin: 300px auto;
+  width: fit-content;
+}
+.login-logo {
+  margin-top: 75px;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+.login-page h1 {
+  color: rgba(255, 255, 255, 0.618);
+  font-weight: 400;
+  font-size: 2.6rem;
+  margin-top: 20px;
+}
+.login-subtitle {
+  color: rgb(255, 255, 255);
+  font-size: 4rem;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+.login-content {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  background: var(--secondary-layouts-bg);
+  border-radius: 10px;
+  padding: 45px 45px;
+}
+.login-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.login-inputs div input{
+  width: 100%;
+}
+.login-inputs span {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+.login-inputs div {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+.login-inputs div span {
+  margin-right: auto;
+  white-space: nowrap;
+}
+.login-inputs div input {
+  margin-left: auto;
+}
+.login-error {
+  color: #f87171;
+  font-size: 1.4rem;
+  margin-top: 15px;
+}
+.login-btns {
+  display: flex;
+  margin-top: 20px;
+}
+.login-btns .btn {
+  width: 100%;
+}
