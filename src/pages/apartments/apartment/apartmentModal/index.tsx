@@ -11,7 +11,7 @@ const ApartmentModal = ({
   handleActiveModal,
   handleApartmentData,
   apartment,
-  activeModal
+  isEdit,
 }: ApartmentModalType) => {
   return (
     <form
@@ -22,21 +22,24 @@ const ApartmentModal = ({
       <div className="backdrop" />
       <div className="apartment-edit-content">
         <CgClose onClick={handleActiveModal} className="x-icon" />
-    
+
         <div className="apartment-inputs">
           {apartmentModalConfig.map((property) => {
             const { label, type, name } = property;
 
-            if (name === "img") return;
             return (
-              <div>
+              <div key={name}>
                 <span>{label}</span>
                 <Input
                   name={name}
-                  defaultValue={apartment ? apartment[name as keyof typeof apartment]  : ''}
+                  defaultValue={
+                    apartment && type !== "file"
+                      ? apartment[name as keyof typeof apartment]
+                      : ""
+                  }
                   variation="custom-search"
                   type={type}
-                  required
+                  required={type !== "file"}
                 />
               </div>
             );
@@ -53,7 +56,7 @@ const ApartmentModal = ({
             Cancel
           </Btn>
           <Btn type="submit" variation="primary" size="lg">
-            {activeModal ? "Add" : "Edit"}
+            {isEdit ? "Edit" : "Add"}
           </Btn>
         </div>
       </div>
