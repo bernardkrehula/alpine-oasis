@@ -7,4 +7,7 @@ export type InputType = {
   value?: string;
   defaultValue: string | number;
   required?: boolean;
+  minLength?: number;
+  min?: number;
+  size?: string;
 };
