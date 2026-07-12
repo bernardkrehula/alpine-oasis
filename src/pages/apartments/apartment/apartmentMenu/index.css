@@ -23,6 +23,8 @@
 }
 .apartment-menu div svg {
   color: rgb(207, 207, 207);
+  height: 15px;
+  width: 15px;
 }
 .apartment-menu div span {
   text-transform: capitalize;
