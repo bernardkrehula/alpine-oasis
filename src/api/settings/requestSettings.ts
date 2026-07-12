@@ -4,13 +4,7 @@ import { GenericError } from "#/utils/GenericError";
 import { isAuthApiError } from "@supabase/supabase-js";
 
 export const requestSettings = async (): Promise<SettingsType> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const response = await supabase.rpc("get_booking_settings", {
-    p_user_id: crypto.randomUUID() , /* user?.id */
-  });
+  const response = await supabase.rpc("get_booking_settings");
 
   if (response.error) {
     if (isAuthApiError(response)) {
