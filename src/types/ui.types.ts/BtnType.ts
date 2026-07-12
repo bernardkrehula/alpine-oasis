@@ -6,7 +6,6 @@ export type BtnType = {
   type: "button" | "submit" | "reset";
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   children: string | ReactNode;
-  disabled?: boolean;
   name?: string;
   active?: string;
 };
