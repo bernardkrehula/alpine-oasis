@@ -2,35 +2,36 @@ import { HiOutlineDuplicate } from "react-icons/hi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import "./index.css";
-import type { ApartmentMenuType } from "#/types/pagest.types.ts/ApartmentPage.types.ts/ApartmentMenu.type";
 import { useRef } from "react";
 import { useClickOutside } from "#/hooks/useClickOutside";
+import type { ApartmentMenuType } from "#/types/ui.types.ts/table.types.ts/Table.type";
 
-const ApartmentMenu = ({
+const EditTableMenu = ({
   id,
-  handleActiveEditModal,
-  deleteApartment,
-  duplicateApartment,
+  onSecondAction,
+  onThirdAction,
+  onFirstAction,
   onClickOutside,
+  handleActiveMenu
 }: ApartmentMenuType) => {
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, onClickOutside);
 
   return (
-    <div className="apartment-menu" id={id} ref={ref}>
-      <div onClick={duplicateApartment}>
+    <div className="apartment-menu" id={id} ref={ref} onClick={handleActiveMenu}>
+      <div onClick={onFirstAction}>
         <HiOutlineDuplicate />
         <span>Duplicate</span>
       </div>
-      <div onClick={handleActiveEditModal}>
+      <div onClick={onSecondAction}>
         <FaPencil />
         <span>Edit</span>
       </div>
-      <div onClick={() => deleteApartment(id)}>
+      <div onClick={() => onThirdAction(id)}>
         <FaRegTrashAlt />
         <span>Delete</span>
       </div>
     </div>
   );
 };
-export default ApartmentMenu;
+export default EditTableMenu;
