@@ -3,6 +3,10 @@
   padding-right: 50px;
   height: 100vh;
 }
+.apartments-loader {
+  margin: 200px auto;
+  width: fit-content;
+}
 .apartments-header {
   display: flex;
 }
