@@ -7,12 +7,12 @@ import {
 import "./index.css";
 import { useSearchParams } from "react-router-dom";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { requestApartments } from "#/api/requestApartmets";
+import { requestApartments } from "#/api/apartments/requestApartmets";
 import type { ActiveApratmentFilter } from "#/types/pagest.types.ts/ApartmentPage.types.ts/ActiveApratmentFilter.type";
 import type { ApartmentType } from "#/types/pagest.types.ts/ApartmentPage.types.ts/Apartment.type";
 import ApartmentModal from "./apartment/apartmentModal";
 import { getFormData } from "#/utils/getFormData";
-import { requestAddNewApartment } from "#/api/requestAddNewApartment";
+import { requestAddNewApartment } from "#/api/apartments/requestAddNewApartment";
 import Filters from "#/components/ui/filters";
 import Sort from "#/components/ui/sort";
 import Table from "#/components/ui/table";
@@ -20,12 +20,15 @@ import Theader from "#/components/ui/table/Theader";
 import Tbody from "#/components/ui/table/Tbody";
 import TRow from "#/components/ui/table/TRow";
 import { columns, defaultApartment, theadData } from "./apartmentsData";
-import { requestDuplicateApartment } from "#/api/requestDuplicateApartment";
+import { requestDuplicateApartment } from "#/api/apartments/requestDuplicateApartment";
 import { toApartmentId } from "#/types/pagest.types.ts/ApartmentPage.types.ts/ApartmentId";
-import { requestApartmentDelete } from "#/api/requestApartmentDelete";
-import { requestEditApartment } from "#/api/requestEditApartment";
-import { requestSingleApartment } from "#/api/requestSingleApartment";
-
+import { requestApartmentDelete } from "#/api/apartments/requestApartmentDelete";
+import { requestEditApartment } from "#/api/apartments/requestEditApartment";
+import { requestSingleApartment } from "#/api/apartments/requestSingleApartment";
+import { requestUploadApartmentImg } from "#/api/apartments/requestUploadApartmentImg";
+import Loader from "#/components/ui/loader";
+//Odraditi upload slika
+//Odraditi settings page
 const Apartments = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeIcon, setActiveIcon] = useState<ActiveApratmentFilter>({
@@ -50,7 +53,7 @@ const Apartments = () => {
     queryFn: () => requestApartments(filterValues),
     placeholderData: keepPreviousData,
   });
-  if (isLoading || !apartments) return;
+  if (isLoading || !apartments) return <div className="apartments-loader"><Loader size="lg" /></div>;
 
   const setSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = e.target.value;
@@ -78,7 +81,12 @@ const Apartments = () => {
   };
   const handleApartmentForm = async (e: React.ChangeEvent<HTMLFormElement>) => {
     const id = e.currentTarget.id;
+    const file = new FormData(e.currentTarget).get("img") as File;
     const data = getFormData(e);
+  
+    if (file && file.size > 0) {
+      data.img = await requestUploadApartmentImg(file, data.id);
+    }
 
     if (id) await requestEditApartment(data);
     else await requestAddNewApartment(data);
