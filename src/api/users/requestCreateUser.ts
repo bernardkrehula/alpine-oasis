@@ -1,8 +1,13 @@
 import supabase from "#/config/supabaseClientVite";
 import type { NewUserType } from "#/types/users.types.ts/NewUser.type";
 import { GenericError } from "#/utils/GenericError";
+import { isAuthApiError } from "@supabase/supabase-js";
 
-export const requestCreateUser = async ({ fullName, email, password }: NewUserType) => {
+export const requestCreateUser = async ({
+  fullName,
+  email,
+  password,
+}: NewUserType) => {
   const response = await supabase.auth.signUp({
     email,
     password,
@@ -10,7 +15,12 @@ export const requestCreateUser = async ({ fullName, email, password }: NewUserTy
   });
 
   if (response.error) {
-    throw new GenericError();
+    if (isAuthApiError(response.error)) {
+      return response;
+    } else {
+      throw new GenericError();
+    }
   }
   return response.data;
 };
+
