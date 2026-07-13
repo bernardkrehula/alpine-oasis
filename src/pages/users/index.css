@@ -1,0 +1,15 @@
+.users {
+  padding: 30px 40px;
+  padding-right: 50px;
+  width: 100%;
+}
+.users h1 {
+  color: white;
+  font-size: 3rem;
+  margin-bottom: 30px;
+}
+.users .form {
+  background-color: var(--secondary-layouts-bg);
+  border-radius: 10px;
+  padding: 30px 45px;
+}
